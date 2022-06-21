@@ -11,6 +11,8 @@ class test extends Controller
 {
 
 
+	//testeo del ORM
+
 	public function testORM()
 	{
 
