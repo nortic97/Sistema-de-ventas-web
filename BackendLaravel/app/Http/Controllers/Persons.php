@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Persons as PersonsModel;
 use Illuminate\Http\Request;
 
 class Persons extends Controller
@@ -13,7 +14,33 @@ class Persons extends Controller
      */
     public function index()
     {
-        //
+
+        $person = PersonsModel::paginate(15)->load('users');
+
+        if(empty($person)){
+
+            $json = array(
+
+                'status' => 'Error',
+                'code' => 404,
+                'message' => 'La base de datos esta vacia'
+
+            );
+
+        }else{
+
+             $json = array(
+
+                'status' => 'succes',
+                'code' => 200,
+                'users' => $person
+
+            );
+
+        }
+
+        return response()->json($json, $json['code']);
+
     }
 
     /**
