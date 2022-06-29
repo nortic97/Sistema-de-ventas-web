@@ -26,9 +26,9 @@ public class RolesModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotBlank(message = "El campo nombre esta vacio")
-    @NotNull(message = "El campo nombre es nulo")
-    @Pattern(message = "No se aceptan numeros", regexp = "[a-zA-Z]")
+    @NotBlank(message = "El capo esta vacio")
+    @NotNull(message = "El campo es nulo")
+    @Pattern(message = "El campo no acepta numeros", regexp = "^[A-Za-z]*$")
     private String role_name;
 
     @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,9 +85,32 @@ public class RolesController {
     }
 
     @PostMapping
-    public ResponseEntity<?> store(@Valid @RequestBody RolesModel rolesModel) {
+    public ResponseEntity<?> store(@Valid @RequestBody RolesModel rolesModel, BindingResult result) {
 
-        return new ResponseEntity<>("ok", HttpStatus.OK);
+        if (result.hasErrors()) {
+
+            Map<Object, Object> errors = new HashMap<>();
+
+            for (FieldError error : result.getFieldErrors()) {
+
+                errors.put(error.getField(), error.getDefaultMessage());
+
+            }
+
+            json.clear();
+            json.put("Errors", errors);
+            return new ResponseEntity<>(json, HttpStatus.OK);
+
+        } else {
+
+            rolesModel.setRole_name(rolesModel.getRole_name().toUpperCase());
+            json.clear();
+            json.put("status", "sucess");
+            json.put("code", 200);
+            json.put("role", rolesModel);
+            return new ResponseEntity<>(json, HttpStatus.OK);
+
+        }
 
     }
 
