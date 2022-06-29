@@ -7,9 +7,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface CRUD<Model> {
 
-    public List<Model> getAllClientes();
+    public List<Model> getAll();
 
-    public Page<Model> getAllClientesByPage(Pageable pageable);
+    public Page<Model> getAllByPage(Pageable pageable);
 
     public Model SaveData(Model model);
 

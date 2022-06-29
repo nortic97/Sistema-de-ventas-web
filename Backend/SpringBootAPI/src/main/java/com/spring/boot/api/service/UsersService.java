@@ -16,14 +16,14 @@ public class UsersService implements CRUD<UsersModel>{
     private UsersDao ud;
 
     @Override
-    public List<UsersModel> getAllClientes() {
+    public List<UsersModel> getAll() {
 
         return ud.findAll();
         
     }
 
     @Override
-    public Page<UsersModel> getAllClientesByPage(Pageable pageable) {
+    public Page<UsersModel> getAllByPage(Pageable pageable) {
 
         return ud.findAll(pageable);
         
@@ -31,17 +31,17 @@ public class UsersService implements CRUD<UsersModel>{
 
     @Override
     public UsersModel SaveData(UsersModel model) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return ud.save(model);
     }
 
     @Override
     public void DeleteDataByID(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ud.deleteById(id);
     }
 
     @Override
     public UsersModel FindById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return ud.findById(id).orElse(null);
     }
     
 }
