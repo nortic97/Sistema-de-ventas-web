@@ -13,7 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import lombok.Data;
 
 @Entity
@@ -28,7 +27,6 @@ public class RolesModel implements Serializable {
     
     @NotBlank(message = "El capo esta vacio")
     @NotNull(message = "El campo es nulo")
-    @Pattern(message = "El campo no acepta numeros", regexp = "^[A-Za-z]*$")
     private String role_name;
 
     @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

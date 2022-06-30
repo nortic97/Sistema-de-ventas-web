@@ -3,6 +3,7 @@ package com.spring.boot.api.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -14,35 +15,34 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "persons")
-@JsonIgnoreProperties({"hibernateLazyInitializer","orders"})
-public class PersonsModel implements Serializable {
+@Table(name = "orders")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "odm"})
+public class OrdersModel implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @JoinColumn(name = "users_id", referencedColumnName = "id")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private UsersModel user;
+    @JoinColumn(name = "persons_id", referencedColumnName = "id")
+    private PersonsModel person;
     
-    private String name;
+    @NotNull(message = "El campo es nulo")
+    @NotBlank(message = "El campo esta vacio")
+    private Double ammount;
     
-    private String surname;
     
-    private String DNI;
+    private Date order_date;
     
-    private String image;
+    private String order_status;
     
-    private String address;
-    
-    private String phone;
-    
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<OrdersModel> orders;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrdersDetailsModel> odm;
     
 }

@@ -14,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -25,8 +28,18 @@ public class UsersModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @NotBlank(message = "Campo vacio")
+    @NotNull(message = "Campo nulo")
     private String user_name;
+    
+    @NotBlank(message = "Campo vacio")
+    @NotNull(message = "Campo nulo")
+    @Email(message = "Email invalido")
     private String mail;
+    
+    @NotBlank(message = "Campo vacio")
+    @NotNull(message = "Campo nulo")
     private String password;
     //private Long roles_id;
     private Timestamp created_at;
