@@ -37,7 +37,7 @@ public class CategoriesModel implements Serializable {
     @NotBlank(message = "El campo esta vacio")
     private String description;
     
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<ProductsCategoriesModel> pcm; 
 
 }

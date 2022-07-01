@@ -28,7 +28,7 @@ public class OrdersDetailsModel implements Serializable {
     @JoinColumn(name = "orders_id", referencedColumnName = "id")
     private OrdersModel order;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "products_id", referencedColumnName = "id")
     private ProductsModel product;
 

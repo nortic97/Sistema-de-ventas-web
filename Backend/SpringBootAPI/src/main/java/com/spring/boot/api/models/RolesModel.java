@@ -29,7 +29,7 @@ public class RolesModel implements Serializable {
     @NotNull(message = "El campo es nulo")
     private String role_name;
 
-    @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "rol", fetch = FetchType.LAZY)
     private List<UsersModel> usersModels;
 
 }

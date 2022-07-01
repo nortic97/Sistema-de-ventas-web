@@ -42,7 +42,7 @@ public class PersonsModel implements Serializable {
     
     private String phone;
     
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
     private List<OrdersModel> orders;
     
 }

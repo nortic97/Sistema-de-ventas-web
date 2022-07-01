@@ -2,7 +2,6 @@
 package com.spring.boot.api.controller;
 
 import com.spring.boot.api.models.PersonsModel;
-import com.spring.boot.api.models.RolesModel;
 import com.spring.boot.api.service.PersonsService;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,15 +9,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/personas")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 public class PersonsController {
     
     @Autowired

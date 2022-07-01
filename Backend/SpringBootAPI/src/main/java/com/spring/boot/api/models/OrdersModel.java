@@ -29,7 +29,7 @@ public class OrdersModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "persons_id", referencedColumnName = "id")
     private PersonsModel person;
     
