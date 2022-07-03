@@ -1,11 +1,8 @@
 package com.spring.boot.api.controller;
 
-import com.spring.boot.api.dao.LoginDao;
 import com.spring.boot.api.models.LoginModel;
-import com.spring.boot.api.models.PersonsModel;
 import com.spring.boot.api.models.UsersModel;
 import com.spring.boot.api.service.LoginService;
-import com.spring.boot.api.service.PersonsService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
@@ -24,23 +21,27 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/login")
 public class LoginController {
 
+    private static final int EXP = 1000 * 60 * 60 * 24 * 7;
+
+    private String token = null;
+
+    private String secretKey = "Prueba";
+
     @Autowired
     private LoginService ls;
-    
-    @Autowired
-    private PersonsService ps;
 
     Map<Object, Object> json = new HashMap<>();
     Map<Object, Object> errorsValidate = new HashMap<>();
 
     @PostMapping
-    public ResponseEntity<?> login(@Valid @RequestBody LoginModel login, BindingResult result) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginModel login, BindingResult result, @RequestParam(name = "decode", required = false, defaultValue = "false") boolean decode) {
 
         if (result.hasErrors()) {
 
@@ -67,13 +68,39 @@ public class LoginController {
 
             if (usuario != null) {
 
-                String token = getJWTToken(usuario);
+                if (token == null || "".equals(token)) {
 
-                return new ResponseEntity<>(token, HttpStatus.OK);
+                    token = getJWTToken(usuario);
+                    login.setToken(token);
+
+                } else {
+
+                    login.setToken(token);
+
+                }
+
+                if (decode != false) {
+
+                    Object user_data = decodeJwt(login.getToken());
+
+                    return new ResponseEntity<>(user_data, HttpStatus.OK);
+
+                } else {
+
+                    json.clear();
+                    json.put("jwt_token", login.getToken());
+
+                    return new ResponseEntity<>(json, HttpStatus.OK);
+
+                }
 
             } else {
 
-                return new ResponseEntity<>("error", HttpStatus.OK);
+                json.clear();
+                json.put("status", "error");
+                json.put("code", 400);
+                json.put("message", "Usuario o contraseña invalidos");
+                return new ResponseEntity<>(json, HttpStatus.BAD_REQUEST);
 
             }
 
@@ -83,12 +110,10 @@ public class LoginController {
 
     private String getJWTToken(UsersModel usuario) {
 
-        String secretKey = "1234567890";
-
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList(usuario.getRol().getRole_name());
 
-        String token = Jwts
+        String jwt = Jwts
                 .builder()
                 .setId(usuario.getId().toString())
                 .setSubject(usuario.getUser_name())
@@ -100,12 +125,23 @@ public class LoginController {
                                 .map(GrantedAuthority::getAuthority)
                                 .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600000))
+                .setExpiration(new Date(System.currentTimeMillis() + EXP))
                 .signWith(SignatureAlgorithm.HS512,
                         secretKey.getBytes()).compact();
 
-        return token;
+        return jwt;
 
     }
+
+    public Object decodeJwt(String token) {
+
+        return Jwts
+                    .parser()
+                    .setSigningKey(secretKey.getBytes())
+                    .parseClaimsJws(token)
+                    .getBody();
+    }
+    
+    
 
 }
