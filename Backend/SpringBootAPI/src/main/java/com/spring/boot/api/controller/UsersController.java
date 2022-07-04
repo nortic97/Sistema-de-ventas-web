@@ -6,7 +6,7 @@ import com.spring.boot.api.service.RolesService;
 import com.spring.boot.api.service.UsersService;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,13 +26,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/usuarios")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 public class UsersController {
 
     @Autowired
@@ -42,8 +39,8 @@ public class UsersController {
     @Autowired
     private RolesService rs;
 
-    Map<Object, Object> json = new HashMap<>();
-    Map<Object, Object> errorsValidate = new HashMap<>();
+    Map<Object, Object> json = new LinkedHashMap<>();
+    Map<Object, Object> errorsValidate = new LinkedHashMap<>();
     List<Object> errors = new ArrayList<>();
 
     @GetMapping
@@ -129,7 +126,7 @@ public class UsersController {
     }
 
     @PostMapping
-    public ResponseEntity<?> store(@Valid @RequestBody UsersModel usersModel, BindingResult result) {
+    public ResponseEntity<?> store(@Valid @RequestBody UsersModel usersModel, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean register) {
 
         if (result.hasErrors()) {
 
@@ -152,11 +149,20 @@ public class UsersController {
 
             try {
 
-                RolesModel rol = rs.FindById(usersModel.getRol().getId());
+                if (register) {
+
+                    RolesModel rol = rs.getRoleIdByRoleName("USUARIO");
+                    usersModel.setRol(rol);
+
+                } else {
+
+                    RolesModel rol = rs.FindById(usersModel.getRol().getId());
+                    usersModel.setRol(rol);
+
+                }
 
                 usersModel.setUser_name(usersModel.getUser_name().trim());
                 usersModel.setMail(usersModel.getMail().trim());
-                usersModel.setRol(rol);
 
                 us.SaveData(usersModel);
 

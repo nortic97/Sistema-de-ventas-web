@@ -3,7 +3,7 @@ package com.spring.boot.api.controller;
 import com.spring.boot.api.models.RolesModel;
 import com.spring.boot.api.service.RolesService;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
@@ -33,8 +33,8 @@ public class RolesController {
     @Autowired
     private RolesService rs;
 
-    Map<Object, Object> json = new HashMap<>();
-    Map<Object, Object> errorVlidator = new HashMap<>();
+    Map<Object, Object> json = new LinkedHashMap<>();
+    Map<Object, Object> errorVlidator = new LinkedHashMap<>();
     List<Object> errors = new ArrayList<>();
 
     @GetMapping

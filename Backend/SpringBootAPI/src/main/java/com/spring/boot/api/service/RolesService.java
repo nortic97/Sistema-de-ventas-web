@@ -48,5 +48,9 @@ public class RolesService implements CRUD<RolesModel> {
         return rd.findById(id).orElse(null);
         
     }
+    
+    public RolesModel getRoleIdByRoleName(String role){
+        return rd.getRoleIdByRoleName(role);
+    }
 
 }

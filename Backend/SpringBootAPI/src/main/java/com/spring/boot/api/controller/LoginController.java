@@ -3,10 +3,11 @@ package com.spring.boot.api.controller;
 import com.spring.boot.api.models.LoginModel;
 import com.spring.boot.api.models.UsersModel;
 import com.spring.boot.api.service.LoginService;
+import com.spring.boot.api.service.UsersService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,22 +26,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/login")
+@RequestMapping("/api")
 public class LoginController {
 
     private static final int EXP = 1000 * 60 * 60 * 24 * 7;
 
     private String token = null;
 
-    private String secretKey = "Prueba";
+    private final String secretKey = "Prueba";
 
     @Autowired
     private LoginService ls;
 
-    Map<Object, Object> json = new HashMap<>();
-    Map<Object, Object> errorsValidate = new HashMap<>();
+    @Autowired
+    private UsersService us;
 
-    @PostMapping
+    Map<Object, Object> json = new LinkedHashMap<>();
+    Map<Object, Object> errorsValidate = new LinkedHashMap<>();
+
+    @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginModel login, BindingResult result, @RequestParam(name = "decode", required = false, defaultValue = "false") boolean decode) {
 
         if (result.hasErrors()) {
@@ -136,12 +140,10 @@ public class LoginController {
     public Object decodeJwt(String token) {
 
         return Jwts
-                    .parser()
-                    .setSigningKey(secretKey.getBytes())
-                    .parseClaimsJws(token)
-                    .getBody();
+                .parser()
+                .setSigningKey(secretKey.getBytes())
+                .parseClaimsJws(token)
+                .getBody();
     }
-    
-    
 
 }
